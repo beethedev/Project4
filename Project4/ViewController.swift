@@ -2,53 +2,43 @@
 //  ViewController.swift
 //  Project4
 //
-//  Created by Oluwabusayo Olorunnipa on 7/1/21.
+//  Created by Oluwabusayo Olorunnipa on 7/6/21.
 //
 
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, WKNavigationDelegate {
-    var webView: WKWebView!
-    
-    override func loadView() {
-        webView = WKWebView()
-        webView.navigationDelegate = self
-        view = webView
-    }
+class ViewController: UITableViewController {
+
+    var websites = ["apple.com", "busayoolorunnipa.com", "busayoolorunnipa.medium.com", "hackingwithswift.com"]
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(openTapped))
+        title = "Sites to Visit"
+   
         
-        let url = URL(string: "https://www.busayoolorunnipa.com")!
-        webView.load(URLRequest(url: url))
-        webView.allowsBackForwardNavigationGestures = true
     }
     
-    @objc func openTapped() {
-        let ac = UIAlertController(title: "Open page...", message: nil, preferredStyle: .actionSheet)
-        ac.addAction(UIAlertAction(title: "apple.com", style: .default, handler: openPage))
-        ac.addAction(UIAlertAction(title: "busayoolorunnipa.com", style: .default, handler: openPage))
-        ac.addAction(UIAlertAction(title: "busayoolorunnipa.medium.com", style: .default, handler: openPage))
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return websites.count
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Site", for: indexPath)
+        cell.textLabel?.text = websites[indexPath.row]
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         if let vc = storyboard?.instantiateViewController(identifier: "Browser") as? WebViewController {
+            vc.website = websites[indexPath.row]
+            vc.siteList = websites
+            navigationController?.pushViewController(vc, animated: true)
+        }
         
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        ac.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-        present(ac, animated: true)
     }
-    
-    // Use guard let instead of force unwapping to be extra safe
-    func openPage(action: UIAlertAction) {
-        guard let actionTitle = action.title else { return }
-        guard let url = URL(string: "https://" + actionTitle) else { return }
-        webView.load(URLRequest(url: url))
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        title = webView.title
-    }
-
-
 }
-
+    
