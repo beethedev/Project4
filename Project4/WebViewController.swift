@@ -89,7 +89,7 @@ class WebViewController: UIViewController , WKNavigationDelegate {
                         return
                     }
                 }
-                let ac = UIAlertController(title: "Sorry", message: "You are not allowed to visit that site", preferredStyle: .alert)
+                let ac = UIAlertController(title: "Uh Oh!", message: "Sorry, You are not allowed to visit that site.", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                 ac.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
                 present(ac, animated: true)
